@@ -1,4 +1,6 @@
-use Test::More qw{no_plan};
+#!perl
+
+use Test::More tests => 4;
 use strict;
 use warnings;
 

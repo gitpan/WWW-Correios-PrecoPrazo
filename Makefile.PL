@@ -10,7 +10,6 @@ WriteMakefile(
     PL_FILES      => {},
     PREREQ_PM     => {
         'Test::More'     => 0,
-        'XML::Simple'    => 0,
         'LWP::UserAgent' => 0,
         'Const::Fast'    => 0,
         'URI'            => 0,

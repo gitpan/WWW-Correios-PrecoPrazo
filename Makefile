@@ -17,7 +17,7 @@
 #     CONFIGURE_REQUIRES => {  }
 #     NAME => q[WWW::Correios::PrecoPrazo]
 #     PL_FILES => {  }
-#     PREREQ_PM => { Test::More=>q[0], LWP::UserAgent=>q[0], URI=>q[0], XML::Simple=>q[0], Const::Fast=>q[0] }
+#     PREREQ_PM => { Test::More=>q[0], LWP::UserAgent=>q[0], URI=>q[0], Const::Fast=>q[0] }
 #     VERSION_FROM => q[lib/WWW/Correios/PrecoPrazo.pm]
 #     clean => { FILES=>q[WWW-Correios-PrecoPrazo-*] }
 #     dist => { COMPRESS=>q[gzip -9f], SUFFIX=>q[gz] }
@@ -59,11 +59,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = WWW::Correios::PrecoPrazo
 NAME_SYM = WWW_Correios_PrecoPrazo
-VERSION = 0.000001
+VERSION = 0.000002
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_000001
+VERSION_SYM = 0_000002
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.000001
+XS_VERSION = 0.000002
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -257,7 +257,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = WWW-Correios-PrecoPrazo
-DISTVNAME = WWW-Correios-PrecoPrazo-0.000001
+DISTVNAME = WWW-Correios-PrecoPrazo-0.000002
 
 
 # --- MakeMaker macro section:
@@ -478,7 +478,7 @@ realclean purge ::  clean realclean_subdirs
 metafile : create_distdir
 	$(NOECHO) $(ECHO) Generating META.yml
 	$(NOECHO) $(ECHO) '---' > META_new.yml
-	$(NOECHO) $(ECHO) 'abstract: '\''Serviço de cálculo de perços e prazos de entrega'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) 'abstract: '\''Serviço de cálculo de preços e prazos de entrega'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'author:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  - '\''Breno G. de Oliveira <garu@cpan.org>'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'build_requires:' >> META_new.yml
@@ -501,12 +501,11 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  LWP::UserAgent: 0' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Test::More: 0' >> META_new.yml
 	$(NOECHO) $(ECHO) '  URI: 0' >> META_new.yml
-	$(NOECHO) $(ECHO) '  XML::Simple: 0' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: 0.000001' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: 0.000002' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
 	$(NOECHO) $(ECHO) '{' > META_new.json
-	$(NOECHO) $(ECHO) '   "abstract" : "Serviço de cálculo de perços e prazos de entrega",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "abstract" : "Serviço de cálculo de preços e prazos de entrega",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "author" : [' >> META_new.json
 	$(NOECHO) $(ECHO) '      "Breno G. de Oliveira <garu@cpan.org>"' >> META_new.json
 	$(NOECHO) $(ECHO) '   ],' >> META_new.json
@@ -542,13 +541,12 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '            "Const::Fast" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "LWP::UserAgent" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "Test::More" : "0",' >> META_new.json
-	$(NOECHO) $(ECHO) '            "URI" : "0",' >> META_new.json
-	$(NOECHO) $(ECHO) '            "XML::Simple" : "0"' >> META_new.json
+	$(NOECHO) $(ECHO) '            "URI" : "0"' >> META_new.json
 	$(NOECHO) $(ECHO) '         }' >> META_new.json
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "stable",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "0.000001"' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "0.000002"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
 
@@ -845,14 +843,13 @@ testdb_static :: testdb_dynamic
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
 	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="$(VERSION)">' > $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '    <ABSTRACT>Serviço de cálculo de perços e prazos de entrega</ABSTRACT>' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '    <ABSTRACT>Serviço de cálculo de preços e prazos de entrega</ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Breno G. de Oliveira &lt;garu@cpan.org&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Const::Fast" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="LWP::UserAgent" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Test::More" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="URI::" />' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="XML::Simple" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="darwin-2level-5.16" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd

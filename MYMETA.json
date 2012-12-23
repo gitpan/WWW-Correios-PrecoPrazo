@@ -1,5 +1,5 @@
 {
-   "abstract" : "ServiÃ§o de cÃ¡lculo de perÃ§os e prazos de entrega",
+   "abstract" : "ServiÃ§o de cÃ¡lculo de preÃ§os e prazos de entrega",
    "author" : [
       "Breno G. de Oliveira <garu@cpan.org>"
    ],
@@ -35,11 +35,10 @@
             "Const::Fast" : "0",
             "LWP::UserAgent" : "0",
             "Test::More" : "0",
-            "URI" : "0",
-            "XML::Simple" : "0"
+            "URI" : "0"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "0.000001"
+   "version" : "0.000002"
 }

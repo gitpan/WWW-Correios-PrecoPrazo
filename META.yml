@@ -1,5 +1,5 @@
 ---
-abstract: 'Serviço de cálculo de perços e prazos de entrega'
+abstract: 'Serviço de cálculo de preços e prazos de entrega'
 author:
   - 'Breno G. de Oliveira <garu@cpan.org>'
 build_requires:
@@ -22,5 +22,4 @@ requires:
   LWP::UserAgent: 0
   Test::More: 0
   URI: 0
-  XML::Simple: 0
-version: 0.000001
+version: 0.000002

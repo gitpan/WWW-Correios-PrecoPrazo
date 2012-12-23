@@ -1,55 +1,69 @@
 package WWW::Correios::PrecoPrazo;
 
-use warnings;
 use strict;
+use warnings;
+
 use Const::Fast;
 use URI;
 
-our $VERSION = '0.000001';
+our $VERSION = '0.000002';
 
-const our %_key_map => (
-    codigo_empresa    => 'nCdEmpresa',
-    senha             => 'sDsSenha',
-    codigo_servico    => 'nCdServico',
-    cep_origem        => 'sCepOrigem',
-    cep_destino       => 'sCepDestino',
-    peso              => 'nVIPeso',
-    formato           => 'nCdFormato',
-    comprimento       => 'nVlComprimento',
-    altura            => 'nVlAltura',
-    largura           => 'nVlLargura',
-    diametro          => 'nVlDiametro',
-    mao_propria       => 'sCdMaoPropria',
-    valor_declarado   => 'nVlValorDeclarado',
-    aviso_recebimento => 'sCdAvisoRecebimento',
-    formato_retorno   => 'StrRetorno',
+const our %INPUT_KEYS => (
+    'codigo_empresa'    => 'nCdEmpresa',
+    'senha'             => 'sDsSenha',
+    'codigo_servico'    => 'nCdServico',
+    'cep_origem'        => 'sCepOrigem',
+    'cep_destino'       => 'sCepDestino',
+    'peso'              => 'nVIPeso',
+    'formato'           => 'nCdFormato',
+    'comprimento'       => 'nVlComprimento',
+    'altura'            => 'nVlAltura',
+    'largura'           => 'nVlLargura',
+    'diametro'          => 'nVlDiametro',
+    'mao_propria'       => 'sCdMaoPropria',
+    'valor_declarado'   => 'nVlValorDeclarado',
+    'aviso_recebimento' => 'sCdAvisoRecebimento',
+    'formato_retorno'   => 'StrRetorno',
 );
 
-const our %_defaults => (
-    codigo_empresa    => '',
-    senha             => '',
-    codigo_servico    => '40010',
-    cep_origem        => '',
-    cep_destino       => '',
-    peso              => 0.1,
-    formato           => 'caixa',
-    comprimento       => 16,
-    altura            => 2,
-    largura           => 11,
-    diametro          => 5,
-    mao_propria       => 'N',
-    valor_declarado   => '0',
-    aviso_recebimento => 'N',
-    formato_retorno   => 'XML',
-    base_url => 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx',
+const our %OUTPUT_KEYS => (
+    'entrega_domiciliar'      => 'EntregaDomiciliar',
+    'erro'                    => 'Erro',
+    'valor'                   => 'Valor',
+    'msg_erro'                => 'MsgErro',
+    'valor_mao_propria'       => 'ValorMaoPropria',
+    'prazo_entrega'           => 'PrazoEntrega',
+    'codigo_servico'          => 'Codigo',
+    'valor_declarado'         => 'ValorValorDeclarado',
+    'valor_aviso_recebimento' => 'ValorAvisoRecebimento',
+    'entrega_sabado'          => 'EntregaSabado',
 );
 
-const our %_packaging_formats => (
-    caixa    => 1,
-    pacote   => 1,
-    rolo     => 2,
-    prisma   => 2,
-    envelope => 3,
+const our %DEFAULTS => (
+    'codigo_empresa'    => '',
+    'senha'             => '',
+    'codigo_servico'    => '40010',
+    'cep_origem'        => '',
+    'cep_destino'       => '',
+    'peso'              => 0.1,
+    'formato'           => 'caixa',
+    'comprimento'       => 16,
+    'altura'            => 2,
+    'largura'           => 11,
+    'diametro'          => 5,
+    'mao_propria'       => 'N',
+    'valor_declarado'   => '0',
+    'aviso_recebimento' => 'N',
+    'formato_retorno'   => 'XML',
+    'base_url' => 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx',
+);
+
+const our %PACKAGING_FORMATS => (
+    'caixa'    => 1,
+    'pacote'   => 1,
+    'rolo'     => 2,
+    'prisma'   => 2,
+    'envelope' => 3,
 );
 
 sub new {
@@ -57,7 +71,7 @@ sub new {
     my $args  = ref $_[0] ? $_[0] : {@_};
     my $atts  = {
         user_agent => _init_user_agent($args),
-        map { $_ => $args->{$_} || $_defaults{$_} } keys %_defaults,
+        map { $_ => $args->{$_} || $DEFAULTS{$_} } keys %DEFAULTS,
     };
 
     return bless $atts, $class;
@@ -67,13 +81,15 @@ sub query {
     my $self = shift;
     my $args = ref $_[0] ? $_[0] : {@_};
 
-    my $params =
-      { map { $_key_map{$_} => $args->{$_} || $self->{$_} } keys %_key_map };
+    my $params = {
+        map { $INPUT_KEYS{$_} => $args->{$_} || $self->{$_} }
+          keys %INPUT_KEYS
+    };
 
-    $params->{ $_key_map{formato} } =
+    $params->{ $INPUT_KEYS{formato} } =
       exists $args->{formato}
-      ? _packaging_format_code( $args->{formato} )
-      : _packaging_format_code( $self->{formato} );
+      ? _pkg_format_code( $args->{formato} )
+      : _pkg_format_code( $self->{formato} );
 
     my $uri = URI->new( $self->{base_url} );
     $uri->query_form($params);
@@ -94,11 +110,10 @@ sub _init_user_agent {
     return $ua;
 }
 
-sub _packaging_format_code {
+sub _pkg_format_code {
     my $format = shift;
 
-    return
-      exists $_packaging_formats{$format} ? $_packaging_formats{$format} : 1;
+    return exists $PACKAGING_FORMATS{$format} ? $PACKAGING_FORMATS{$format} : 1;
 }
 
 1;
@@ -107,7 +122,7 @@ __END__
 
 =head1 NAME
 
-WWW::Correios::PrecoPrazo - Serviço de cálculo de perços e prazos de entrega
+WWW::Correios::PrecoPrazo - Serviço de cálculo de preços e prazos de entrega
 de encomendas (Brazilian Postal Object Tracking Service)
 
 =head1 DESCRIPTION
@@ -130,6 +145,9 @@ Este módulo visa ser extremamente leve a fim de não introduzir dependências
 extras em sua aplicação. Você pode adequá-lo ao seu ambiente e suas necessidades
 através da injeção de dependências (I<dependency injection>) durante a criação
 do objeto.
+
+A documentação completa sobre o webservice dos Correios pode ser encontrada em
+L<http://www.correios.com.br/webServices/PDF/SCPP_manual_implementacao_calculo_remoto_de_precos_e_prazos.pdf>
 
 =head1 MÉTODOS
 
@@ -154,41 +172,42 @@ autenticado ao serviço. O valor padrão é uma string vazia, ''.
 
 =item * codigo_servico
 
-Este módulo abstrai a utilização de um código de serviço através dos
-parâmetros C<'contrato'> e C<'servico'> acima. Infelizmente, a documentação
-dos Correios é escassa e dá o mesmo nome para códigos diferentes. Assim,
-caso deseje maior controle, é possível indicar diretamente o código do
-serviço a ser consultado. Até a data de publicação deste módulo, os
-seguintes códigos eram vigentes:
+Infelizmente a documentação dos Correios é escassa e dá o mesmo nome para
+serviços diferentes. Para evitar confusão, este módulo trabalha apenas com os
+códigos numéricos dos serviços.
 
-   +----------+---------------------------------+
-   |  Código  | Serviço                         |
-   +----------+---------------------------------+
-   |  41106   | PAC sem contrato                |
-   |  40010   | SEDEX sem contrato              |
-   |  40045   | SEDEX a Cobrar, sem contrato    |
-   |  40126   | SEDEX a Cobrar, com contrato    |
-   |  40215   | SEDEX 10, sem contrato          |
-   |  40290   | SEDEX Hoje, sem contrato        |
-   |  40096   | SEDEX com contrato              |
-   |  40436   | SEDEX com contrato              |
-   |  40444   | SEDEX com contrato              |
-   |  81019   | e-SEDEX, com contrato           |
-   |  41068   | PAC com contrato                |
-   |  40568   | SEDEX com contrato              |
-   |  40606   | SEDEX com contrato              |
-   |  81868   | (Grupo 1) e-SEDEX, com contrato |
-   |  81833   | (Grupo 2) e-SEDEX, com contrato |
-   |  81850   | (Grupo 3) e-SEDEX, com contrato |
-   +----------+---------------------------------+
+Até a data de publicação deste módulo, os seguintes códigos eram vigentes:
+
+    +--------+----------------------------------+
+    | Código | Serviço                          |
+    +--------+----------------------------------+
+    | 40010  | SEDEX sem contrato               |
+    | 40045  | SEDEX a Cobrar, sem contrato     |
+    | 40096  | SEDEX com contrato               |
+    | 40126  | SEDEX a Cobrar, com contrato     |
+    | 40215  | SEDEX 10, sem contrato           |
+    | 40290  | SEDEX Hoje, sem contrato         |
+    | 40436  | SEDEX com contrato               |
+    | 40444  | SEDEX com contrato               |
+    | 40568  | SEDEX com contrato               |
+    | 40606  | SEDEX com contrato               |
+    | 41068  | PAC com contrato                 |
+    | 41106  | PAC sem contrato                 |
+    | 81019  | e-SEDEX, com contrato            |
+    | 81027  | e-SEDEX Prioritário, com conrato |
+    | 81035  | e-SEDEX Express, com contrato    |
+    | 81833  | (Grupo 2) e-SEDEX, com contrato  |
+    | 81850  | (Grupo 3) e-SEDEX, com contrato  |
+    | 81868  | (Grupo 1) e-SEDEX, com contrato  |
+    +--------+----------------------------------+
 
 =item * cep_origem
 
-CEP de origem, sem hífen. O valor padrão é I<undef>.
+CEP de origem, sem hífen. O valor padrão é I<''>.
 
 =item * cep_destino
 
-CEP de destino, sem hífen. O valor padrão é I<undef>.
+CEP de destino, sem hífen. O valor padrão é I<''>.
 
 =item * peso
 
