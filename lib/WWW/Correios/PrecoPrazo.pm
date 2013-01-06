@@ -6,7 +6,7 @@ use warnings;
 use Const::Fast;
 use URI;
 
-our $VERSION = '0.000002';
+our $VERSION = '0.000003';
 
 const our %INPUT_KEYS => (
     'codigo_empresa'    => 'nCdEmpresa',
@@ -120,10 +120,16 @@ sub _pkg_format_code {
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 WWW::Correios::PrecoPrazo - Serviço de cálculo de preços e prazos de entrega
 de encomendas (Brazilian Postal Object Tracking Service)
+
+=head1 VERSION
+
+0.0.3
 
 =head1 DESCRIPTION
 

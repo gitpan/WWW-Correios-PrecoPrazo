@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<includepath>
-  <includepathentry path="/Users/blabos/perl5/perlbrew/perls/perl-5.16.2/lib/5.16.2" />
-  <includepathentry path="/Users/blabos/perl5/perlbrew/perls/perl-5.16.2/lib/site_perl/5.16.2" />
-  <includepathentry path="${resource_loc:/WWW-Correios-PrecoPrazo/lib}" />
-</includepath>
-
