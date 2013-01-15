@@ -1,5 +1,8 @@
 Revision history for WWW-Correios-PrecoPrazo
 
+0.0.4   2013-01-15
+            - Fix on paramenter name nVlPeso
+
 0.0.3   2013-01-06
             - More documentation
             - Setting pod encoding to utf8

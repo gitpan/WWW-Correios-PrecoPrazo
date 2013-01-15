@@ -6,7 +6,7 @@ use warnings;
 use Const::Fast;
 use URI;
 
-our $VERSION = '0.000003';
+our $VERSION = '0.000004';
 
 const our %INPUT_KEYS => (
     'codigo_empresa'    => 'nCdEmpresa',
@@ -14,7 +14,7 @@ const our %INPUT_KEYS => (
     'codigo_servico'    => 'nCdServico',
     'cep_origem'        => 'sCepOrigem',
     'cep_destino'       => 'sCepDestino',
-    'peso'              => 'nVIPeso',
+    'peso'              => 'nVlPeso',
     'formato'           => 'nCdFormato',
     'comprimento'       => 'nVlComprimento',
     'altura'            => 'nVlAltura',
@@ -129,7 +129,7 @@ de encomendas (Brazilian Postal Object Tracking Service)
 
 =head1 VERSION
 
-0.0.3
+0.0.4
 
 =head1 DESCRIPTION
 
