@@ -1,13 +1,24 @@
 #!perl
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use strict;
 use warnings;
 
 use WWW::Correios::PrecoPrazo;
 
-ok( WWW::Correios::PrecoPrazo->new, 'Construtor Vazio' );
-ok( WWW::Correios::PrecoPrazo->new( formato => 'caixa' ),
-    'Construtor recebendo Hash' );
-ok( WWW::Correios::PrecoPrazo->new( { formato => 'caixa' } ),
-    'Construtor recebendo HashRef' );
+my $cpp;
+
+$cpp = WWW::Correios::PrecoPrazo->new;
+ok( defined $cpp, 'Construtor sem argumentos' );
+$cpp = undef;
+
+$cpp = WWW::Correios::PrecoPrazo->new(
+    {
+        scheme => 'ftp',
+        host   => 'localhost',
+        path   => '/foo/bar',
+    }
+);
+ok( defined $cpp, 'Construtor com argumentos' );
+ok( UNIVERSAL::isa( $cpp->{base_uri}, 'URI' ), 'URI instanciada' );
+ok( $cpp->{base_uri}->as_string eq 'ftp://localhost/foo/bar' );

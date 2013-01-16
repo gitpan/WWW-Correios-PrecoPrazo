@@ -13,6 +13,7 @@ WriteMakefile(
         'LWP::UserAgent' => 0,
         'Const::Fast'    => 0,
         'URI'            => 0,
+        'URI::Escape'    => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES    => 'WWW-Correios-PrecoPrazo-*' },

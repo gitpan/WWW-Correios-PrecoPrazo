@@ -35,10 +35,11 @@
             "Const::Fast" : "0",
             "LWP::UserAgent" : "0",
             "Test::More" : "0",
-            "URI" : "0"
+            "URI" : "0",
+            "URI::Escape" : "0"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "0.000004"
+   "version" : "0.001000"
 }

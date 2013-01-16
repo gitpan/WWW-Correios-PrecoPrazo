@@ -5,8 +5,9 @@ use warnings;
 
 use Const::Fast;
 use URI;
+use URI::Escape;
 
-our $VERSION = '0.000004';
+our $VERSION = '0.001000';
 
 const our %INPUT_KEYS => (
     'codigo_empresa'    => 'nCdEmpresa',
@@ -55,7 +56,6 @@ const our %DEFAULTS => (
     'valor_declarado'   => '0',
     'aviso_recebimento' => 'N',
     'formato_retorno'   => 'XML',
-    'base_url' => 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx',
 );
 
 const our %PACKAGING_FORMATS => (
@@ -69,9 +69,17 @@ const our %PACKAGING_FORMATS => (
 sub new {
     my $class = shift;
     my $args  = ref $_[0] ? $_[0] : {@_};
-    my $atts  = {
+
+    my $uri = URI->new;
+    $uri->scheme( $args->{scheme} || 'http' );
+    $uri->host( $args->{host}     || 'ws.correios.com.br' );
+    $uri->path( $args->{path}     || '/calculador/CalcPrecoPrazo.aspx' );
+
+    delete @{$args}{qw{scheme host path}};
+
+    my $atts = {
         user_agent => _init_user_agent($args),
-        map { $_ => $args->{$_} || $DEFAULTS{$_} } keys %DEFAULTS,
+        base_uri   => $uri,
     };
 
     return bless $atts, $class;
@@ -82,19 +90,16 @@ sub query {
     my $args = ref $_[0] ? $_[0] : {@_};
 
     my $params = {
-        map { $INPUT_KEYS{$_} => $args->{$_} || $self->{$_} }
+        map { $INPUT_KEYS{$_} => $args->{$_} || $DEFAULTS{$_} }
           keys %INPUT_KEYS
     };
 
-    $params->{ $INPUT_KEYS{formato} } =
-      exists $args->{formato}
-      ? _pkg_format_code( $args->{formato} )
-      : _pkg_format_code( $self->{formato} );
+    $params->{ $INPUT_KEYS{formato} } = _pkg_format_code( $args->{formato} );
 
-    my $uri = URI->new( $self->{base_url} );
+    my $uri = $self->{base_uri}->clone;
     $uri->query_form($params);
 
-    return $self->{user_agent}->get( $uri->as_string );
+    return $self->{user_agent}->get( uri_unescape( $uri->as_string ) );
 }
 
 sub _init_user_agent {
@@ -104,7 +109,7 @@ sub _init_user_agent {
 
     unless ($ua) {
         require LWP::UserAgent;
-        $ua = LWP::UserAgent->new;
+        $ua = LWP::UserAgent->new( %{$args} );
     }
 
     return $ua;
@@ -112,8 +117,16 @@ sub _init_user_agent {
 
 sub _pkg_format_code {
     my $format = shift;
+    my $code   = undef;
 
-    return exists $PACKAGING_FORMATS{$format} ? $PACKAGING_FORMATS{$format} : 1;
+    $format = $DEFAULTS{formato} unless $format;
+
+    $code = $PACKAGING_FORMATS{$format}
+      if exists $PACKAGING_FORMATS{$format};
+
+    $code = $PACKAGING_FORMATS{ $DEFAULTS{formato} };
+
+    return $code;
 }
 
 1;
@@ -129,7 +142,7 @@ de encomendas (Brazilian Postal Object Tracking Service)
 
 =head1 VERSION
 
-0.0.4
+0.1.0
 
 =head1 DESCRIPTION
 
@@ -161,22 +174,49 @@ L<http://www.correios.com.br/webServices/PDF/SCPP_manual_implementacao_calculo_r
 
 =head2 new( %parametros )
 
-Construtor do objeto. Recebe os seguintes parâmetros, todos opcionais:
+Construtor do objeto. Aceita como parâmetros um hash ou hashref.
+
+Caso exista uma chave B<user_agent>, espera que o seu valor seja um
+objeto capaz de realizar um B<get> no webservice dos Correios.
+
+Quando não existir uma chave B<user_agent>, cria um objeto C<LWP::UserAgent>
+passando para o seu construtor as chaves restantes.
+
+
+=head2 query()
+
+=head2 query( %parametros )
+
+Realiza a consulta de preço e prazo, consultando o WebService dos Correios.
+
+Não valida os parâmetros quanto à sua obrigatoriedade, delegando esta tarefa ao
+webservice dos Correios.
+
+Recebe os seguintes parâmetros:
 
 =over 4
 
 =item * codigo_empresa
 
+B<OPCIONAL>
+
 Código administrativo de sua empresa junto à ECT. Este código está disponível
-no corpo do contrato firmado com os Correios. O valor padrão é uma string
-vazia, ''.
+no corpo do contrato firmado com os Correios.
+
+O valor padrão é I<''> (string vazia).
 
 =item * senha
 
+B<OPCIONAL>
+
 Senha associada ao seu código administrativo (acima), necessária para acesso
-autenticado ao serviço. O valor padrão é uma string vazia, ''.
+autenticado ao serviço.
+
+O valor padrão é I<''> (string vazia).
 
 =item * codigo_servico
+
+B<OBRIGATÓRIO>
 
 Infelizmente a documentação dos Correios é escassa e dá o mesmo nome para
 serviços diferentes. Para evitar confusão, este módulo trabalha apenas com os
@@ -209,13 +249,19 @@ Até a data de publicação deste módulo, os seguintes códigos eram vigentes:
 
 =item * cep_origem
 
-CEP de origem, sem hífen. O valor padrão é I<''>.
+B<OBRIGATÓRIO>
+
+CEP de origem, sem hífen.
 
 =item * cep_destino
 
-CEP de destino, sem hífen. O valor padrão é I<''>.
+B<OBRIGATÓRIO>
+
+CEP de destino, sem hífen.
 
 =item * peso
+
+B<OBRIGATÓRIO>
 
 Peso físico da encomenda, incluindo peso da embalagem, em quilogramas (KG).
 O valor padrão é C<0.1>, indicando peso de 100 gramas. O limite de peso
@@ -223,6 +269,8 @@ O valor padrão é C<0.1>, indicando peso de 100 gramas. O limite de peso
 pelo "SEDEX Hoje", cujo limite é de 10Kg.
 
 =item * formato
+
+B<OPCIONAL>
 
 Formato da encomenda, incluindo embalagem. A especificação do formato é
 exigida pelos correios para precificação e validação de dimensões mínimas
@@ -243,53 +291,69 @@ ser respeitados:
 
 =item * altura
 
-Obrigatório para os formatos C<'caixa'> e C<'pacote'>. O valor máximo
-é de 90cm. Caso não seja informada, assume o valor mínimo de 2cm. A
-altura não pode ser maior que o comprimento.
+B<OPCIONAL>
+
+Para os formatos C<'caixa'> e C<'pacote'>. O valor máximo
+é de 90cm. A altura não pode ser maior que o comprimento.
+
+O valor padrão é I<'2'> (2cm).
 
 =item * largura
 
-Obrigatório para os formatos C<'caixa'> e C<'pacote'>. O valor máximo
-é de 90cm. Caso não seja informada, assume o valor mínimo de 5cm,
-ou 11cm caso o comprimento seja menor que 25 cm.
+B<OPCIONAL>
+
+Para os formatos C<'caixa'> e C<'pacote'>. O valor máximo
+é de 90cm.
+
+O valor padrão é I<'11'> (11cm).
 
 =item * comprimento
 
-Obrigatório para todos os formatos. O valor máximo é de 90cm. Caso
-não seja informada, assume o valor mínimo, que é de 16cm para
-caixa/pacote e 18cm para rolo/prisma.
+B<OPCIONAL>
+
+Para todos os formatos. O valor máximo é de 90cm.
+
+O valor padrão é I<'16'> (16cm).
 
 =item * diametro
 
-Obrigatório para os formatos C<'caixa'> e C<'pacote'>. O valor máximo
-é de 90cm. Caso não seja informada, assume o valor mínimo de 5cm.
+B<OPCIONAL>
+
+Para os formatos C<'rolo'> e C<'prisma'>. O valor máximo
+é de 90cm.
+
+O valor padrão é I<'5'> (5cm).
 
 =item * mao_propria
 
-Booleano. Indica se o serviço adicional "mão própria" será utilizado.
-O valor padrão é falso.
+B<OPCIONAL>
+
+Indica se o serviço adicional "mão própria" será utilizado. Pode assumir os
+valores B<S> (sim) ou B<N> (não).
+
+O valor padrão é I<'N'>.
 
 =item * aviso_recebimento
 
+B<OPCIONAL>
+
 Booleano. Indica se a encomenda será entregue com o serviço adicional
-de aviso de recebimento. O valor padrão é falso.
+de aviso de recebimento. Pode assumir os
+valores B<S> (sim) ou B<N> (não).
+
+O valor padrão é I<'N'>.
 
 =item * valor_declarado
+
+B<OPCIONAL>
 
 Indica se a encomenda será entregue com o serviço adicional de
 valor declarado. Para utilizar o serviço, basta definir neste campo o
 valor declarado desejado, em Reais, até o limite máximo de 10_000,00.
-O valor padrão é 0, indicando que o serviço não será utilizado.
+
+O valor padrão é I<'0'>, indicando que o serviço não será utilizado.
 
 =back
-
-=head2 query()
-
-=head2 query( %parametros )
-
-Realiza a consulta de preço e prazo, consultando o WebService dos
-Correios conforme necessário. Recebe os mesmos parâmetros do construtor
-(veja acima).
 
 
 =head1 CONFIGURATION AND ENVIRONMENT

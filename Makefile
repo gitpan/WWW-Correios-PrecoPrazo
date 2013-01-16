@@ -17,7 +17,7 @@
 #     CONFIGURE_REQUIRES => {  }
 #     NAME => q[WWW::Correios::PrecoPrazo]
 #     PL_FILES => {  }
-#     PREREQ_PM => { Test::More=>q[0], LWP::UserAgent=>q[0], URI=>q[0], Const::Fast=>q[0] }
+#     PREREQ_PM => { Test::More=>q[0], LWP::UserAgent=>q[0], URI=>q[0], URI::Escape=>q[0], Const::Fast=>q[0] }
 #     VERSION_FROM => q[lib/WWW/Correios/PrecoPrazo.pm]
 #     clean => { FILES=>q[WWW-Correios-PrecoPrazo-*] }
 #     dist => { COMPRESS=>q[gzip -9f], SUFFIX=>q[gz] }
@@ -59,11 +59,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = WWW::Correios::PrecoPrazo
 NAME_SYM = WWW_Correios_PrecoPrazo
-VERSION = 0.000004
+VERSION = 0.001000
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_000004
+VERSION_SYM = 0_001000
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.000004
+XS_VERSION = 0.001000
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -257,7 +257,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = WWW-Correios-PrecoPrazo
-DISTVNAME = WWW-Correios-PrecoPrazo-0.000004
+DISTVNAME = WWW-Correios-PrecoPrazo-0.001000
 
 
 # --- MakeMaker macro section:
@@ -501,7 +501,8 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  LWP::UserAgent: 0' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Test::More: 0' >> META_new.yml
 	$(NOECHO) $(ECHO) '  URI: 0' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: 0.000004' >> META_new.yml
+	$(NOECHO) $(ECHO) '  URI::Escape: 0' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: 0.001000' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
 	$(NOECHO) $(ECHO) '{' > META_new.json
@@ -541,12 +542,13 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '            "Const::Fast" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "LWP::UserAgent" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "Test::More" : "0",' >> META_new.json
-	$(NOECHO) $(ECHO) '            "URI" : "0"' >> META_new.json
+	$(NOECHO) $(ECHO) '            "URI" : "0",' >> META_new.json
+	$(NOECHO) $(ECHO) '            "URI::Escape" : "0"' >> META_new.json
 	$(NOECHO) $(ECHO) '         }' >> META_new.json
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "stable",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "0.000004"' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "0.001000"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
 
@@ -850,6 +852,7 @@ ppd :
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="LWP::UserAgent" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Test::More" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="URI::" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="URI::Escape" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="darwin-2level-5.16" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd
