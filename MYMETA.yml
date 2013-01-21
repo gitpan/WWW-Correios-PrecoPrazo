@@ -18,9 +18,9 @@ no_index:
     - t
     - inc
 requires:
-  Const::Fast: 0
+  Const::Fast: 0.012
   LWP::UserAgent: 0
   Test::More: 0
   URI: 0
   URI::Escape: 0
-version: 0.001000
+version: 0.001001

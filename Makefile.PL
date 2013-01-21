@@ -11,7 +11,7 @@ WriteMakefile(
     PREREQ_PM     => {
         'Test::More'     => 0,
         'LWP::UserAgent' => 0,
-        'Const::Fast'    => 0,
+        'Const::Fast'    => 0.012,
         'URI'            => 0,
         'URI::Escape'    => 0,
     },

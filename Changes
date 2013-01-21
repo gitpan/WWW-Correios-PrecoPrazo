@@ -1,5 +1,8 @@
 Revision history for WWW-Correios-PrecoPrazo
 
+0.1.1   2013-01-21
+            - Fix PREREQ version of Const::Fast
+
 0.1.0   2013-01-16
             - Fix on default user agent args
             - Constructor args

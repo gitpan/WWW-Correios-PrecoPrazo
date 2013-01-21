@@ -7,7 +7,7 @@ use Const::Fast;
 use URI;
 use URI::Escape;
 
-our $VERSION = '0.001000';
+our $VERSION = '0.001001';
 
 const our %INPUT_KEYS => (
     'codigo_empresa'    => 'nCdEmpresa',
@@ -142,7 +142,7 @@ de encomendas (Brazilian Postal Object Tracking Service)
 
 =head1 VERSION
 
-0.1.0
+0.1.1
 
 =head1 DESCRIPTION
 
