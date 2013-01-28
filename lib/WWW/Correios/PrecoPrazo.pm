@@ -7,7 +7,7 @@ use Const::Fast;
 use URI;
 use URI::Escape;
 
-our $VERSION = '0.001001';
+our $VERSION = '0.002000';
 
 const our %INPUT_KEYS => (
     'codigo_empresa'    => 'nCdEmpresa',
@@ -28,16 +28,16 @@ const our %INPUT_KEYS => (
 );
 
 const our %OUTPUT_KEYS => (
-    'entrega_domiciliar'      => 'EntregaDomiciliar',
-    'erro'                    => 'Erro',
-    'valor'                   => 'Valor',
-    'msg_erro'                => 'MsgErro',
-    'valor_mao_propria'       => 'ValorMaoPropria',
-    'prazo_entrega'           => 'PrazoEntrega',
-    'codigo_servico'          => 'Codigo',
-    'valor_declarado'         => 'ValorValorDeclarado',
-    'valor_aviso_recebimento' => 'ValorAvisoRecebimento',
-    'entrega_sabado'          => 'EntregaSabado',
+    'EntregaDomiciliar'     => 'entrega_domiciliar',
+    'Erro'                  => 'erro',
+    'Valor'                 => 'valor',
+    'MsgErro'               => 'msg_erro',
+    'ValorMaoPropria'       => 'valor_mao_propria',
+    'PrazoEntrega'          => 'prazo_entrega',
+    'Codigo'                => 'codigo_servico',
+    'ValorValorDeclarado'   => 'valor_declarado',
+    'ValorAvisoRecebimento' => 'valor_aviso_recebimento',
+    'EntregaSabado'         => 'entrega_sabado',
 );
 
 const our %DEFAULTS => (
@@ -142,7 +142,7 @@ de encomendas (Brazilian Postal Object Tracking Service)
 
 =head1 VERSION
 
-0.1.1
+0.2.0
 
 =head1 DESCRIPTION
 

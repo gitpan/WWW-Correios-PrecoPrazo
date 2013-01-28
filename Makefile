@@ -59,11 +59,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = WWW::Correios::PrecoPrazo
 NAME_SYM = WWW_Correios_PrecoPrazo
-VERSION = 0.001001
+VERSION = 0.002000
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_001001
+VERSION_SYM = 0_002000
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.001001
+XS_VERSION = 0.002000
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -257,7 +257,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = WWW-Correios-PrecoPrazo
-DISTVNAME = WWW-Correios-PrecoPrazo-0.001001
+DISTVNAME = WWW-Correios-PrecoPrazo-0.002000
 
 
 # --- MakeMaker macro section:
@@ -502,7 +502,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  Test::More: 0' >> META_new.yml
 	$(NOECHO) $(ECHO) '  URI: 0' >> META_new.yml
 	$(NOECHO) $(ECHO) '  URI::Escape: 0' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: 0.001001' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: 0.002000' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
 	$(NOECHO) $(ECHO) '{' > META_new.json
@@ -548,7 +548,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "stable",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "0.001001"' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "0.002000"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
 

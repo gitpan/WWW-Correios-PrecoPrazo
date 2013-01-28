@@ -1,5 +1,8 @@
 Revision history for WWW-Correios-PrecoPrazo
 
+0.2.0   2013-01-28
+            - Reversing keys/values from %OUTPU_KEYS
+
 0.1.1   2013-01-21
             - Fix PREREQ version of Const::Fast
 
