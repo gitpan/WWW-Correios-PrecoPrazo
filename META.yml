@@ -1,26 +1,34 @@
 ---
 abstract: 'Serviço de cálculo de preços e prazos de entrega'
 author:
+  - 'Breno G. de Oliveira  C<< <garu@cpan.org> >>'
   - 'Breno G. de Oliveira <garu@cpan.org>'
 build_requires:
-  ExtUtils::MakeMaker: 0
+  ExtUtils::MakeMaker: 6.59
+  Test::More: 0
 configure_requires:
-  ExtUtils::MakeMaker: 0
+  ExtUtils::MakeMaker: 6.59
+  Module::Install: 0
+distribution_type: module
 dynamic_config: 1
-generated_by: 'ExtUtils::MakeMaker version 6.6302, CPAN::Meta::Converter version 2.120630'
-license: unknown
+generated_by: 'Module::Install version 1.06'
+license: artistic
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: WWW-Correios-PrecoPrazo
 no_index:
   directory:
-    - t
     - inc
+    - t
 requires:
   Const::Fast: 0.012
   LWP::UserAgent: 0
-  Test::More: 0
   URI: 0
   URI::Escape: 0
-version: 0.002000
+  perl: 5.8.8
+resources:
+  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Correios-PrecoPrazo
+  license: http://www.perlfoundation.org/artistic_license_1_0
+  repository: git://github.com/EstanteVirtual/WWW-Correios-PrecoPrazo.git
+version: 0.002001

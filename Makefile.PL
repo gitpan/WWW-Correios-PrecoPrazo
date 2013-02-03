@@ -1,20 +1,38 @@
+use 5.008008;
 use strict;
-use warnings;
-use ExtUtils::MakeMaker;
+use warnings FATAL => 'all';
+use inc::Module::Install;
 
-WriteMakefile(
-    NAME          => 'WWW::Correios::PrecoPrazo',
-    AUTHOR        => 'Breno G. de Oliveira <garu@cpan.org>',
-    VERSION_FROM  => 'lib/WWW/Correios/PrecoPrazo.pm',
-    ABSTRACT_FROM => 'lib/WWW/Correios/PrecoPrazo.pm',
-    PL_FILES      => {},
-    PREREQ_PM     => {
-        'Test::More'     => 0,
+name     'WWW-Correios-PrecoPrazo';
+all_from 'lib/WWW/Correios/PrecoPrazo.pm';
+author   q{Breno G. de Oliveira <garu@cpan.org>};
+license  'artistic';
+
+perl_version 5.008008;
+
+tests_recursive('t');
+
+resources (
+   license    => 'http://www.perlfoundation.org/artistic_license_1_0',
+   repository => 'git://github.com/EstanteVirtual/WWW-Correios-PrecoPrazo.git',
+   bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Correios-PrecoPrazo',
+);
+
+configure_requires (
+   'Module::Install' => 0,
+);
+
+build_requires (
+   'Test::More' => 0,
+);
+
+requires (
         'LWP::UserAgent' => 0,
         'Const::Fast'    => 0.012,
         'URI'            => 0,
         'URI::Escape'    => 0,
-    },
-    dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean => { FILES    => 'WWW-Correios-PrecoPrazo-*' },
 );
+
+install_as_cpan;
+auto_install;
+WriteAll;

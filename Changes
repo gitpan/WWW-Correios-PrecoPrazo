@@ -1,5 +1,9 @@
 Revision history for WWW-Correios-PrecoPrazo
 
+0.2.1   2013-02-03
+            - Changing from ExtUtils::MakeMaker to Module::Install
+            - Changing min perl version to 5.8.8
+
 0.2.0   2013-01-28
             - Reversing keys/values from %OUTPU_KEYS
 
