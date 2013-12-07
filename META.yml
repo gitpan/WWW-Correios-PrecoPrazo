@@ -31,4 +31,4 @@ resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Correios-PrecoPrazo
   license: http://www.perlfoundation.org/artistic_license_1_0
   repository: git://github.com/EstanteVirtual/WWW-Correios-PrecoPrazo.git
-version: 0.002001
+version: 0.002002
