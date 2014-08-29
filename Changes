@@ -1,5 +1,9 @@
 Revision history for WWW-Correios-PrecoPrazo
 
+0.2.3   2014-08-29
+            - Copy of args during build. This prevents exceptions
+            when the args are constants.
+
 0.2.2   2013-12-07
             - MYMETA no longer shipped with dist (dolmen)
 

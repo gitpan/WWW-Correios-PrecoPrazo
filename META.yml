@@ -1,5 +1,5 @@
 ---
-abstract: 'Serviço de cálculo de preços e prazos de entrega'
+abstract: 'Serviço de cálculo de preços e prazos de entrega de encomendas (Brazilian Postal Object Tracking Service)'
 author:
   - 'Breno G. de Oliveira  C<< <garu@cpan.org> >>'
   - 'Breno G. de Oliveira <garu@cpan.org>'
@@ -31,4 +31,4 @@ resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Correios-PrecoPrazo
   license: http://www.perlfoundation.org/artistic_license_1_0
   repository: git://github.com/EstanteVirtual/WWW-Correios-PrecoPrazo.git
-version: 0.002002
+version: 0.002003

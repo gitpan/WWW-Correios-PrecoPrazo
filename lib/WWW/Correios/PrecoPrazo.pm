@@ -7,7 +7,7 @@ use Const::Fast;
 use URI;
 use URI::Escape;
 
-our $VERSION = '0.002002';
+our $VERSION = '0.002003';
 
 const our %INPUT_KEYS => (
     'codigo_empresa'    => 'nCdEmpresa',
@@ -68,17 +68,17 @@ const our %PACKAGING_FORMATS => (
 
 sub new {
     my $class = shift;
-    my $args  = ref $_[0] ? $_[0] : {@_};
+    my %args  = ref $_[0] ? %{ $_[0] } : @_;
 
     my $uri = URI->new;
-    $uri->scheme( $args->{scheme} || 'http' );
-    $uri->host( $args->{host}     || 'ws.correios.com.br' );
-    $uri->path( $args->{path}     || '/calculador/CalcPrecoPrazo.aspx' );
+    $uri->scheme( $args{scheme} || 'http' );
+    $uri->host( $args{host}     || 'ws.correios.com.br' );
+    $uri->path( $args{path}     || '/calculador/CalcPrecoPrazo.aspx' );
 
-    delete @{$args}{qw{scheme host path}};
+    delete @args{qw{scheme host path}};
 
     my $atts = {
-        user_agent => _init_user_agent($args),
+        user_agent => _init_user_agent(\%args),
         base_uri   => $uri,
     };
 
