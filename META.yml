@@ -1,7 +1,7 @@
 ---
-abstract: 'Serviço de cálculo de preços e prazos de entrega de encomendas (Brazilian Postal Object Tracking Service)'
+abstract: 'Serviço de cálculo de preços e prazos de entrega de encomendas (Brazilian Postal shipping cost and delivery time)'
 author:
-  - 'Breno G. de Oliveira  C<< <garu@cpan.org> >>'
+  - '-2014, Breno G. de Oliveira, Blabos de Blebe.'
   - 'Breno G. de Oliveira <garu@cpan.org>'
 build_requires:
   ExtUtils::MakeMaker: 6.59
@@ -11,7 +11,7 @@ configure_requires:
   Module::Install: 0
 distribution_type: module
 dynamic_config: 1
-generated_by: 'Module::Install version 1.06'
+generated_by: 'Module::Install version 1.10'
 license: artistic
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -21,6 +21,7 @@ no_index:
   directory:
     - inc
     - t
+    - xt
 requires:
   Const::Fast: 0.012
   LWP::UserAgent: 0
@@ -28,7 +29,7 @@ requires:
   URI::Escape: 0
   perl: 5.8.8
 resources:
-  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Correios-PrecoPrazo
+  bugtracker: https://github.com/garu/WWW-Correios-PrecoPrazo/issues
   license: http://www.perlfoundation.org/artistic_license_1_0
-  repository: git://github.com/EstanteVirtual/WWW-Correios-PrecoPrazo.git
-version: 0.002003
+  repository: https://github.com/garu/WWW-Correios-PrecoPrazo.git
+version: '0.3'

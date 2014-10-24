@@ -14,8 +14,8 @@ tests_recursive('t');
 
 resources (
    license    => 'http://www.perlfoundation.org/artistic_license_1_0',
-   repository => 'git://github.com/EstanteVirtual/WWW-Correios-PrecoPrazo.git',
-   bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Correios-PrecoPrazo',
+   repository => 'https://github.com/garu/WWW-Correios-PrecoPrazo.git',
+   bugtracker => 'https://github.com/garu/WWW-Correios-PrecoPrazo/issues',
 );
 
 configure_requires (

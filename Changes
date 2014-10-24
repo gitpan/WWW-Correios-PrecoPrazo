@@ -1,5 +1,12 @@
 Revision history for WWW-Correios-PrecoPrazo
 
+0.3     2014-10-24
+            - only querying the webservice when required parameters are given
+            - basic response parsing
+            - cep_origem and cep_destino can be with or without dashes
+            - improved documentation
+            - more tests
+
 0.2.3   2014-08-29
             - Copy of args during build. This prevents exceptions
             when the args are constants.
@@ -12,7 +19,7 @@ Revision history for WWW-Correios-PrecoPrazo
             - Changing min perl version to 5.8.8
 
 0.2.0   2013-01-28
-            - Reversing keys/values from %OUTPU_KEYS
+            - Reversing keys/values from %OUTPUT_KEYS
 
 0.1.1   2013-01-21
             - Fix PREREQ version of Const::Fast

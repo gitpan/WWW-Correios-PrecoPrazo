@@ -20,7 +20,7 @@ t/00.load.t
 t/01-new.t
 t/02-query.t
 t/03-copy.t
-t/perlcritic.t
-t/perlcriticrc
-t/pod-coverage.t
-t/pod.t
+xt/perlcritic.t
+xt/perlcriticrc
+xt/pod-coverage.t
+xt/pod.t

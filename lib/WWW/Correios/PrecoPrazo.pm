@@ -7,9 +7,9 @@ use Const::Fast;
 use URI;
 use URI::Escape;
 
-our $VERSION = '0.002003';
+our $VERSION = 0.3;
 
-const our %INPUT_KEYS => (
+const my %INPUT_KEYS => (
     'codigo_empresa'    => 'nCdEmpresa',
     'senha'             => 'sDsSenha',
     'codigo_servico'    => 'nCdServico',
@@ -27,7 +27,9 @@ const our %INPUT_KEYS => (
     'formato_retorno'   => 'StrRetorno',
 );
 
-const our %OUTPUT_KEYS => (
+const my @REQUIRED => qw( codigo_servico cep_origem cep_destino );
+
+const my %OUTPUT_KEYS => (
     'EntregaDomiciliar'     => 'entrega_domiciliar',
     'Erro'                  => 'erro',
     'Valor'                 => 'valor',
@@ -40,7 +42,7 @@ const our %OUTPUT_KEYS => (
     'EntregaSabado'         => 'entrega_sabado',
 );
 
-const our %DEFAULTS => (
+const my %DEFAULTS => (
     'codigo_empresa'    => '',
     'senha'             => '',
     'codigo_servico'    => '40010',
@@ -58,7 +60,7 @@ const our %DEFAULTS => (
     'formato_retorno'   => 'XML',
 );
 
-const our %PACKAGING_FORMATS => (
+const my %PACKAGING_FORMATS => (
     'caixa'    => 1,
     'pacote'   => 1,
     'rolo'     => 2,
@@ -89,6 +91,10 @@ sub query {
     my $self = shift;
     my $args = ref $_[0] ? $_[0] : {@_};
 
+    return {} unless scalar(grep exists $args->{$_}, @REQUIRED) == @REQUIRED;
+    $args->{cep_origem}  =~ s/-//;
+    $args->{cep_destino} =~ s/-//;
+
     my $params = {
         map { $INPUT_KEYS{$_} => $args->{$_} || $DEFAULTS{$_} }
           keys %INPUT_KEYS
@@ -99,7 +105,19 @@ sub query {
     my $uri = $self->{base_uri}->clone;
     $uri->query_form($params);
 
-    return $self->{user_agent}->get( uri_unescape( $uri->as_string ) );
+    return _parse_response($self->{user_agent}->get( uri_unescape( $uri->as_string ) ));
+}
+
+sub _parse_response {
+    my ($res) = @_;
+    my %data  = ( response => $res );
+
+    if (my $content = $res->content) {
+        if (substr($content, 0, 5) eq '<?xml') {
+            $data{$1} = $2 while $content =~ m{<([^<]+)>([^<]+)</\1>}gs;
+        }
+    }
+    return \%data;
 }
 
 sub _init_user_agent {
@@ -138,14 +156,40 @@ __END__
 =head1 NAME
 
 WWW::Correios::PrecoPrazo - Serviço de cálculo de preços e prazos de entrega
-de encomendas (Brazilian Postal Object Tracking Service)
+de encomendas (Brazilian Postal shipping cost and delivery time)
+
+=head1 SYNOPSIS
+
+    use WWW::Correios::PrecoPrazo;
+
+    my $correios = WWW::Correios::PrecoPrazo->new;
+
+    my $res = $correios->query(
+        codigo_servico => 41106,        # PAC sem contrato (tabela abaixo)
+        cep_origem     => '20021-140',
+        cep_destino    => '01310-200',
+
+        # opcionais:
+        peso              => 0.1,          # 100 gramas
+        formato           => 'caixa',
+        altura            => 2,
+        largura           => 11,
+        comprimento       => 16,
+        mao_propria       => 'N',
+        aviso_recebimento => 'N',
+        valor_declarado   => 300,
+    );
+
+    say "Entrega em $res->{PrazoEntrega} dias, por $res->{Valor}"
+        unless $res->{Erro};
+
 
 =head1 DESCRIPTION
 
 This module provides a way to query the Brazilian Postal Office (Correios) via
-WebService, regarding fees and deadlines. Since the main target for this module
-is Brazilian developers, the documentation is provided in portuguese only. If
-you need help with this module please contact the author.
+WebService, regarding fees and estimated delivery times. Since the main target
+for this module is Brazilian developers, the documentation is provided in
+portuguese only. If you need help with this module please contact the author.
 
 =head1 DESCRIÇÃO
 
@@ -185,8 +229,19 @@ passando para o seu construtor as chaves restantes.
 
 Realiza a consulta de preço e prazo, consultando o WebService dos Correios.
 
-Não valida os parâmetros quanto à sua obrigatoriedade, delegando esta tarefa ao
-webservice dos Correios.
+Este método sempre retorna um hashref. O conteúdo dele depende dos parâmetros
+de entrada.
+
+Por uma questão de eficiência, não consultamos o webservice dos Correios
+caso um dos parâmetros obrigatórios (a saber: C<cep_origem>, C<cep_destino>
+e C<codigo_servico>) não seja informado.
+
+Este módulo não valida os parâmetros quanto à sua estrutura ou conteúdo,
+delegando esta tarefa ao webservice dos Correios.
+
+O valor retornado é um hash ref com a resposta dos correios transformada em
+pares de chave/valor. Uma chave extra, 'response', contém o objeto de resposta
+HTTP completo.
 
 Recebe os seguintes parâmetros:
 
@@ -247,13 +302,13 @@ Até a data de publicação deste módulo, os seguintes códigos eram vigentes:
 
 B<OBRIGATÓRIO>
 
-CEP de origem, sem hífen.
+CEP de origem, com ou sem traço.
 
 =item * cep_destino
 
 B<OBRIGATÓRIO>
 
-CEP de destino, sem hífen.
+CEP de destino, com ou sem traço.
 
 =item * peso
 
@@ -275,8 +330,8 @@ C<'caixa'> (ou C<'pacote'>) e C<'rolo'> (ou C<'prisma'>).
 
 O valor padrão é I<'caixa'>.
 
-B<Importante>: para o formato caixa/pacote, os seguintes limites precisam
-ser respeitados:
+B<Importante>: para os formatos caixa/pacote e rolo/prisma, os seguintes
+limites precisam ser respeitados:
 
   +-------+-----------------------------------+--------+--------+
   | tipo  | regra                             | mínimo | máximo |
@@ -333,7 +388,7 @@ O valor padrão é I<'N'>.
 
 B<OPCIONAL>
 
-Booleano. Indica se a encomenda será entregue com o serviço adicional
+Indica se a encomenda será entregue com o serviço adicional
 de aviso de recebimento. Pode assumir os
 valores B<S> (sim) ou B<N> (não).
 
@@ -352,16 +407,16 @@ O valor padrão é I<'0'>, indicando que o serviço não será utilizado.
 =back
 
 
-=head1 CONFIGURATION AND ENVIRONMENT
+=head1 CONFIGURAÇÃO E VARIÁVEIS DE AMBIENTE
 
-Net::Correios requires no configuration files or environment variables.
+WWW::Correios::PrecoPrazo não precisa de qualquer arquivo de configuraçào
+ou variável de ambiente.
 
 
-=head1 BUGS AND LIMITATIONS
+=head1 BUGS E LIMITAÇÕES
 
-Please report any bugs or feature requests to
-C<bug-net-correios@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
+Por favor entre em contato sobre qualquer bug ou pedido de feature em:
+L<https://github.com/garu/WWW-Correios-PrecoPrazo/issues>.
 
 
 =head1 AGRADECIMENTOS
@@ -371,7 +426,7 @@ Este módulo não existiria sem o serviço gratuito de preços e prazos dos Corr
 L<< http://www.correios.com.br/webservices/ >>
 
 
-=head1 AUTHORS
+=head1 AUTORES
 
 Breno G. de Oliveira  C<< <garu@cpan.org> >>
 Blabos de Blebe  C<< <blabos@cpan.org> >>
@@ -379,7 +434,8 @@ Blabos de Blebe  C<< <blabos@cpan.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2011-2013, Estante Virtual. All rights reserved.
+Copyright (c) 2011-2014, Breno G. de Oliveira, Blabos de Blebe.
+All rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
