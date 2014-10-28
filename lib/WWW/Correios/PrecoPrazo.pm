@@ -7,7 +7,7 @@ use Const::Fast;
 use URI;
 use URI::Escape;
 
-our $VERSION = 0.3;
+our $VERSION = 0.31;
 
 const my %INPUT_KEYS => (
     'codigo_empresa'    => 'nCdEmpresa',
@@ -114,7 +114,13 @@ sub _parse_response {
 
     if (my $content = $res->content) {
         if (substr($content, 0, 5) eq '<?xml') {
-            $data{$1} = $2 while $content =~ m{<([^<]+)>([^<]+)</\1>}gs;
+            $data{$1} = $2 while $content =~ m{<([^<]+)>([^<]*)</\1>}gs;
+            if (
+              exists $data{Erro}
+              && $content =~ m{<MsgErro>(?:<!\[CDATA\[)?(.+?)(?:\]\]\>)?</MsgErro>}
+            ) {
+                $data{MsgErro} = $1;
+            }
         }
     }
     return \%data;
@@ -180,8 +186,12 @@ de encomendas (Brazilian Postal shipping cost and delivery time)
         valor_declarado   => 300,
     );
 
-    say "Entrega em $res->{PrazoEntrega} dias, por $res->{Valor}"
-        unless $res->{Erro};
+    if ($res->{Erro}) {
+        warn $res->{MsgErro};
+    }
+    else {
+        say "Entrega em $res->{PrazoEntrega} dias, por $res->{Valor}";
+    }
 
 
 =head1 DESCRIPTION

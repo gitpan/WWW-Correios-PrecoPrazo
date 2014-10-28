@@ -1,5 +1,12 @@
 Revision history for WWW-Correios-PrecoPrazo
 
+0.31    2014-10-28
+            - Improved parsing
+            - include error message when there's an error
+            - more tests
+            - more docs
+            - switched back to EUMM
+
 0.3     2014-10-24
             - only querying the webservice when required parameters are given
             - basic response parsing
